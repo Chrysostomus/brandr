@@ -74,6 +74,33 @@ if [[ $picks ]]; then
 fi
 }
 
+function choose_second_monitor {
+PS3="Relative to which monitor?"
+# Gather the results in an array.
+monitors=($connected_monitors "proceed" "cancel")
+
+select pick in "${monitors[@]}"
+do
+	case $pick in
+		proceed)
+			break
+			;;
+		cancel)
+			exit
+			;;		
+		*)	
+			picks+=("$pick")
+			break
+			;;		
+	esac
+done
+
+if [[ $picks ]]; then
+    echo "${picks[@]}"
+    picks=()
+fi
+}
+
 function choose_resolution {
 PS3="Choose new resolution: "
 # Gather the results in an array.
@@ -98,7 +125,7 @@ do
 done
 
 if [[ $picks ]]; then
-    printf 'Setting theme to %s\n' "${picks[*]}"
+    printf 'Setting resolution to %s\n' "${picks[*]}"
     xrandr --output $chosen_monitor --mode "${picks[@]}"
     picks=()
 fi
@@ -173,12 +200,13 @@ function move_monitor {
 # Gather the results in an array.
 chosen_monitor=$(choose_connected_monitor)
 position=$(choose_position)
-other_monitors=$(choose_connected_monitor)
+other_monitor=$(choose_second_monitor)
 xrandr --output $chosen_monitor --$position $other_monitor
 }
 
 function set_primary {
-	xrandr --output $@ --primary
+	mon=$(choose_connected_monitor)
+	xrandr --output $mon --primary
 }
 
 function main {
@@ -186,15 +214,12 @@ function main {
     clear
     echo ""
     echo -e "                             $NC ::Monitor:: $NC "
-    echo ""
-    echo -e ""
-    echo -e " ┌────────────────────────────────────────────────────────────────────────────┐"
-    echo -e " │  $NC  1 $NC  List monitors                       $NC  2 $NC  Set resolution            │"
-    echo -e " │  $NC  3 $NC  Set primary monitor                 $NC  4 $NC  Position monitors         │"
-    echo -e " │  $NC  5 $NC  Connect/disconnect monitor          $NC  6 $NC  Rotate monitor            │"    
-
-    echo " └────────────────────────────────────────────────────────────────────────────┘"
-        echo -e "    $NC Select a number and press [Enter]$NC $NC - 0 Exit$NC"
+    echo -e " ┌───────────────────────────────────────────────────────────────────────┐"
+    echo -e " │    1   List monitors                    2   Set resolution            │"
+    echo -e " │    3   Set primary monitor              4   Position monitors         │"
+    echo -e " │    5   Connect/disconnect monitor       6   Rotate monitor            │"    
+    echo -e " └───────────────────────────────────────────────────────────────────────┘"
+        echo -e "              Select a number and press [Enter]  - 0 Exit"
     echo ""
     read -s -n1 choix
     case $choix in
