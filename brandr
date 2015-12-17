@@ -20,6 +20,13 @@ in_array() {
     return 1
 }
 
+function save_settings {
+	echo -e "What should the new profile be called?"
+	read profile
+	autorandr.sh --save $profile
+	echo -e "Current settings were save under the name $profile"
+}
+
 function choose_monitor {
 PS3="Choose monitor to operate on: "
 # Gather the results in an array.
@@ -217,7 +224,8 @@ function main {
     echo -e " ┌───────────────────────────────────────────────────────────────────────┐"
     echo -e " │    1   List monitors                    2   Set resolution            │"
     echo -e " │    3   Set primary monitor              4   Position monitors         │"
-    echo -e " │    5   Connect/disconnect monitor       6   Rotate monitor            │"    
+    echo -e " │    5   Connect/disconnect monitor       6   Rotate monitor            │"
+    echo -e " │    7   Save display settings            8   Dynamic monitor detection │"    
     echo -e " └───────────────────────────────────────────────────────────────────────┘"
         echo -e "              Select a number and press [Enter]  - 0 Exit"
     echo ""
@@ -227,45 +235,65 @@ function main {
             echo
             xrandr -q
             echo ""
-            echo -e "$NC Operation complete. To return to appearance menu press [Enter] $NC"
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             read
             ;;
         2)
             echo
             choose_resolution
             echo ""
-            echo -e "$NC Operation complete. To return to appearance menu press [Enter] $NC"
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             read
             ;;
         3)
             echo
             set_primary
             echo ""
-            echo -e "$NC Operation complete. To return to appearance menu press [Enter] $NC"
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             read
             ;;
         4)
             echo
             move_monitor
             echo ""
-            echo -e "$NC Operation complete. To return to appearance menu press [Enter] $NC"
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             read
             ;;
         5)
             echo
             choose_monitor | connect_monitor
             echo ""
-            echo -e "$NC Operation complete. To return to appearance menu press [Enter] $NC"
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             read
             ;;
         6)
             echo
             rotate_monitor
             echo ""
-            echo -e "$NC Operation complete. To return to appearance menu press [Enter] $NC"
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             read
             ;;
-
+        7)
+            echo
+            save_settings
+            echo ""
+			echo 'Add "autorandr --change" to your autostart file' 
+			echo 'to automatically choose profile on startup'
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
+            echo ""
+            read
+            ;;
+        8)
+            echo
+            sudo pacman -S srandrd
+            echo ""
+			echo 'Add "sranrdrd autorandr --change" to your autostart file' 
+			echo 'to load settings when monitor is plugged in. Use option 7 '
+			echo 'to save your settings for different monitor configurations.'
+            echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
+            echo ""
+            read
+            ;;
         0)
             clear && exit
             read
