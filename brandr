@@ -277,8 +277,8 @@ function main {
             echo
             save_settings
             echo ""
-			echo 'Add "autorandr --change" to your autostart file' 
-			echo 'to automatically choose profile on startup'
+	    echo 'Add "autorandr --change --default" to your autostart file' 
+	    echo 'to automatically choose profile on startup'
             echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             echo ""
             read
@@ -287,9 +287,9 @@ function main {
             echo
             sudo pacman -S srandrd
             echo ""
-			echo 'Add "sranrdrd autorandr --change" to your autostart file' 
-			echo 'to load settings when monitor is plugged in. Use option 7 '
-			echo 'to save your settings for different monitor configurations.'
+            echo 'Add "sranrdrd autorandr --change --default" to your autostart file' 
+	    echo 'to load settings when monitor is plugged in. Use option 7 '
+	    echo 'to save your settings for different monitor configurations.'
             echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             echo ""
             read
