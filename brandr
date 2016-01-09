@@ -47,16 +47,13 @@ PS3="Choose new resolution: "
 # Gather the results in an array.
 chosen_monitor=$(choose_connected_monitor)
 next_monitor=$(xrandr -q | awk '/connected/ {print $1}' | sed -n "/$chosen_monitor/{n;p;}")
-resolutions=($(xrandr -q | sed -n -e "/$chosen_monitor/,/$next_monitor/ p" | awk '{print $1}' | sed -e '1d;$d') "proceed" "cancel")
+resolutions=($(xrandr -q | sed -n -e "/$chosen_monitor/,/$next_monitor/ p" | awk '{print $1}' | sed -e '1d;$d') "cancel")
 
 select pick in "${resolutions[@]}"
 do
 	case $pick in
-		proceed)
-			break
-			;;
 		cancel)
-			exit
+			break
 			;;		
 		*)	
 			picks+=("$pick")
@@ -77,17 +74,14 @@ function rotate_monitor {
 PS3="Choose rotation: "
 # Gather the results in an array.
 chosen_monitor=$(choose_monitor)
-action=("left" "right" "inverted" "normal" "proceed" "cancel")
+action=("left" "right" "inverted" "normal" "cancel")
 
 select pick in "${action[@]}"
 do
 	case $pick in
-		proceed)
+		cancel)
 			break
 			;;
-		cancel)
-			exit
-			;;		
 		*)	
 			picks+=("$pick")
 			break
@@ -117,16 +111,13 @@ fi
 }
 
 function choose_position {
-positions=("left-of" "right-of" "above" "below" "same-as" "proceed" "cancel")
+positions=("left-of" "right-of" "above" "below" "same-as" "cancel")
 PS3="Where to place this monitor?: "
 select pick in "${positions[@]}"
 do
 	case $pick in
-		proceed)
-			break
-			;;
 		cancel)
-			exit
+			break
 			;;		
 		*)	
 			picks+=("$pick")
