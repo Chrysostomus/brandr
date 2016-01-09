@@ -28,90 +28,24 @@ function save_settings {
 }
 
 function choose_monitor {
-PS3="Choose monitor to operate on: "
-# Gather the results in an array.
-monitors=($all_monitors "proceed" "cancel")
-
-select pick in "${monitors[@]}"
-do
-	case $pick in
-		proceed)
-			break
-			;;
-		cancel)
-			exit
-			;;		
-		*)	
-			picks+=("$pick")
-			break
-			;;		
-	esac
-done
-
-if [[ $picks ]]; then
-    echo "${picks[@]}"
-    picks=()
-fi
+xrandr -q | awk '/connected/ {print $1}' | fzf-tmux --reverse -e --prompt='Choose monitor to operate on >'
 }
 
 function choose_connected_monitor {
 PS3="Choose monitor to operate on: "
 # Gather the results in an array.
 monitors=($connected_monitors "proceed" "cancel")
-
-select pick in "${monitors[@]}"
-do
-	case $pick in
-		proceed)
-			break
-			;;
-		cancel)
-			exit
-			;;		
-		*)	
-			picks+=("$pick")
-			break
-			;;		
-	esac
-done
-
-if [[ $picks ]]; then
-    echo "${picks[@]}"
-    picks=()
-fi
+xrandr -q | awk '/ connected/ {print $1}' | fzf-tmux --reverse -e --prompt='Choose monitor to operate on >'
 }
 
 function choose_second_monitor {
-PS3="Relative to which monitor?"
-# Gather the results in an array.
-monitors=($connected_monitors "proceed" "cancel")
-
-select pick in "${monitors[@]}"
-do
-	case $pick in
-		proceed)
-			break
-			;;
-		cancel)
-			exit
-			;;		
-		*)	
-			picks+=("$pick")
-			break
-			;;		
-	esac
-done
-
-if [[ $picks ]]; then
-    echo "${picks[@]}"
-    picks=()
-fi
+xrandr -q | awk '/connected/ {print $1}' | fzf-tmux --reverse -e --prompt='Relative to which monitor? >'
 }
 
 function choose_resolution {
 PS3="Choose new resolution: "
 # Gather the results in an array.
-chosen_monitor=$(choose_monitor)
+chosen_monitor=$(choose_connected_monitor)
 next_monitor=$(xrandr -q | awk '/connected/ {print $1}' | sed -n "/$chosen_monitor/{n;p;}")
 resolutions=($(xrandr -q | sed -n -e "/$chosen_monitor/,/$next_monitor/ p" | awk '{print $1}' | sed -e '1d;$d') "proceed" "cancel")
 
