@@ -116,9 +116,6 @@ PS3="Where to place this monitor?: "
 select pick in "${positions[@]}"
 do
 	case $pick in
-		cancel)
-			break
-			;;		
 		*)	
 			picks+=("$pick")
 			echo "${picks[@]}"
@@ -133,7 +130,11 @@ function move_monitor {
 chosen_monitor=$(choose_connected_monitor)
 position=$(choose_position)
 other_monitor=$(choose_second_monitor)
-xrandr --output $chosen_monitor --$position $other_monitor
+if ! [[ $position == cancel ]]; then
+	xrandr --output $chosen_monitor --$position $other_monitor
+else 
+	echo -e "Procedure cancelled"
+fi
 }
 
 function set_primary {
@@ -152,7 +153,7 @@ function main {
     echo -e " │    5   Connect/disconnect monitor       6   Rotate monitor            │"
     echo -e " │    7   Save display settings            8   Dynamic monitor detection │"    
     echo -e " └───────────────────────────────────────────────────────────────────────┘"
-        echo -e "              Select a number and press [Enter]  - 0 Exit"
+    echo -e "          Select a number         -        0 Exit"
     echo ""
     read -s -n1 choix
     case $choix in
