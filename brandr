@@ -104,7 +104,7 @@ connected_monitors=($(xrandr -q | awk '/ connected/ {print $1}'))
 chosen_monitor=$(choose_monitor)
 
 if in_array connected_monitors $chosen_monitor; then
-		xrandr --putput $chosen_monitor --off	
+		xrandr --output $chosen_monitor --off	
 	else
 		xrandr --output --auto $chosen_monitor 
 fi
