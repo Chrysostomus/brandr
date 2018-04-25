@@ -100,13 +100,13 @@ fi
 function connect_monitor {
 PS3="Choose monitor to connect or disconnect: "
 # Gather the results in an array.
-connected_monitors=($(xrandr -q | awk '/ connected/ {print $1}'))
+active_monitors=$(xrandr | awk '/\ connected/ && /[[:digit:]]x[[:digit:]].*+/{print $1}')
 chosen_monitor=$(choose_monitor)
 
-if in_array connected_monitors $chosen_monitor; then
+if in_array active_monitors $chosen_monitor; then
 		xrandr --output $chosen_monitor --off	
 	else
-		xrandr --output --auto $chosen_monitor 
+		xrandr --output $chosen_monitor --auto  
 fi
 }
 
@@ -187,7 +187,7 @@ function main {
             ;;
         5)
             echo
-            choose_monitor | connect_monitor
+            connect_monitor
             echo ""
             echo -e "$NC Operation complete. To return to menu press [Enter] $NC"
             read
